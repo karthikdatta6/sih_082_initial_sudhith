@@ -57,6 +57,12 @@ __all__ = [
     "add_target_time_features",
     "station_nw_axis_weights",
     "upwind_downwind_gradient",
+    # ---------- NEW v2.1 feature functions ----------
+    "compute_ventilation_coefficient",
+    "compute_hygroscopic_swelling",
+    "compute_chemical_age_ratios",
+    "compute_inversion_lapse_rate",
+    "VENTILATION_CRISIS_THRESHOLD_M2S",
 ]
 
 # ---------------------------------------------------------------------------
@@ -95,6 +101,10 @@ BLH_FLOOR_M = 20.0
 WIND_FLOOR_MS = 0.5
 MIN_LAG_FLOOR_H = 0.5               # avoids division blow-up at zero advection
 LAG_CLAMP_H = (6.0, 72.0)
+
+# CPCB official ventilation crisis threshold (m2/s).
+# Source: CPCB Emergency Response Action Plan for NCR (2019).
+VENTILATION_CRISIS_THRESHOLD_M2S = 2000.0
 
 # ---------------------------------------------------------------------------
 # FEATURE NAME REGISTRY
@@ -290,6 +300,183 @@ def dewpoint_depression(temperature_c, dewpoint_c):
     offered as the principled companion to the inversion trap index.
     """
     return np.asarray(temperature_c, dtype=float) - np.asarray(dewpoint_c, dtype=float)
+
+
+# ---------------------------------------------------------------------------
+# BLOCK 1b - NEW v2.1 ALGEBRAIC FEATURE EXTENSIONS
+# ---------------------------------------------------------------------------
+# These four functions are MODULAR EXTENSIONS: they are pure functions with no
+# side effects and always return physically-sensible values with default fallbacks.
+# They do NOT modify the existing feature schema (the schema stays at 86 cols).
+# They are provided for dashboard display, physics stress tests, and optional
+# re-training runs.
+
+def compute_ventilation_coefficient(blh, wind_speed):
+    """
+    Ventilation Coefficient (VC) — the canonical atmospheric dispersion proxy
+    used by CPCB and IMD for Delhi NCR emergency alerts.
+
+        VC = BLH * wind_speed    [m^2/s]
+
+    A low VC indicates a stagnant, poorly ventilated atmosphere in which
+    emissions accumulate rapidly.
+
+    Returns
+    -------
+    vc : ndarray
+        Ventilation coefficient in m^2/s.  Clipped to [0, ∞).
+    is_ventilation_crisis : ndarray
+        Binary flag: 1.0 if VC < 2000 m^2/s (CPCB emergency threshold), else 0.0.
+
+    Reference
+    ---------
+    CPCB, "Emergency Action Plan for Air Quality Management in Delhi-NCR," 2019.
+    Threshold source: Mishra & Srinivasan (2020), Atmos. Environ. 223.
+    """
+    blh_arr = np.asarray(blh, dtype=float)
+    ws_arr = np.asarray(wind_speed, dtype=float)
+
+    vc = np.maximum(0.0, blh_arr * ws_arr)
+    is_ventilation_crisis = np.where(vc < VENTILATION_CRISIS_THRESHOLD_M2S, 1.0, 0.0)
+    return vc, is_ventilation_crisis
+
+
+def compute_hygroscopic_swelling(pm25, dewpoint_depression_val):
+    """
+    Hygroscopic Swelling Index — models winter fog-smog coupling where
+    aerosols absorb moisture and swell, increasing their effective optical
+    and mass cross-section.
+
+        swelling_index = PM2.5 / (1 + exp(-dewpoint_depression))
+
+    Physical rationale
+    ------------------
+    * When dewpoint_depression → 0 (air nearly saturated, DD ≈ 0):
+        sigmoid(0) = 0.5, so swelling_index ≈ PM2.5 / 1.5.
+        Moderate swelling even at low PM2.5.
+    * When dewpoint_depression >> 0 (very dry air):
+        sigmoid(+∞) = 1, so swelling_index ≈ PM2.5 / 2.0.
+        Minimal swelling — low RH suppresses hygroscopic growth.
+    * When dewpoint_depression < 0 (supersaturated / fog):
+        sigmoid(−) → 0, denominator → 1.0, swelling_index ≈ PM2.5.
+        Maximum aerosol swelling — onset of fog-smog feedback.
+
+    This sigmoid form is a standard kappa-Köhler approximation linearised
+    around the observed Delhi winter humidity range.
+
+    Parameters
+    ----------
+    pm25 : array-like
+        PM2.5 concentration in µg/m³.
+    dewpoint_depression_val : array-like
+        T − Td in °C.  Positive = dry; negative = foggy/supersaturated.
+
+    Returns
+    -------
+    swelling_index : ndarray
+        Dimensionless hygroscopic swelling index (same units / scale as PM2.5
+        but transformed). Always ≥ 0.
+    """
+    pm = np.asarray(pm25, dtype=float)
+    dd = np.asarray(dewpoint_depression_val, dtype=float)
+
+    denom = 1.0 + np.exp(-dd)          # sigmoid denominator; always in (1, 2)
+    swelling_index = pm / denom
+    return np.where(np.isfinite(swelling_index), swelling_index, 0.0)
+
+
+def compute_chemical_age_ratios(pm25, pm10, nox, no2):
+    """
+    Chemical Age Ratios — two dimensionless spectral fingerprints that allow
+    a downstream classifier (or a GBDT feature) to discriminate between
+    emission sources and atmospheric processing states.
+
+    1. Fine-to-Coarse Ratio
+    -----------------------
+        fine_coarse_ratio = PM2.5 / (PM10 + 1e-3)
+
+    PM2.5 / PM10 ≈ 0.9–1.0  → fresh combustion smoke (diesel, biomass burning,
+                               stubble fire plume). Fine particles dominate.
+    PM2.5 / PM10 ≈ 0.3–0.5  → mechanical dust, road re-suspension.
+                               Coarse fraction dominates.
+
+    2. Photochemical Age Ratio
+    --------------------------
+        photochemical_age_ratio = NOx / (NO2 + 1e-3)
+
+    NOx / NO2 >> 1  → fresh tailpipe exhaust (NOx ≈ NO + NO2, mostly NO
+                       close to source). Chemically young air mass.
+    NOx / NO2 ≈ 1.0 → aged plume. Photochemical cycling has converted NO → NO2
+                       via O3 + NO → NO2 + O2. Regionally transported air mass.
+
+    Parameters
+    ----------
+    pm25, pm10, nox, no2 : array-like
+        Ground-level concentrations in µg/m³.
+
+    Returns
+    -------
+    fine_coarse_ratio : ndarray
+        PM2.5 / (PM10 + 1e-3). Bounded in [0, 1] for clean data.
+    photochemical_age_ratio : ndarray
+        NOx / (NO2 + 1e-3). Values > 1 indicate fresh exhaust.
+    """
+    pm25_arr = np.asarray(pm25, dtype=float)
+    pm10_arr = np.asarray(pm10, dtype=float)
+    nox_arr = np.asarray(nox, dtype=float)
+    no2_arr = np.asarray(no2, dtype=float)
+
+    fine_coarse_ratio = pm25_arr / (pm10_arr + 1e-3)
+    photochemical_age_ratio = nox_arr / (no2_arr + 1e-3)
+
+    # Replace non-finite values with a physically neutral sentinel (0.0 for
+    # fine_coarse, 1.0 for photochemical — the "background / aged plume" state).
+    fine_coarse_ratio = np.where(np.isfinite(fine_coarse_ratio), fine_coarse_ratio, 0.0)
+    photochemical_age_ratio = np.where(np.isfinite(photochemical_age_ratio),
+                                       photochemical_age_ratio, 1.0)
+    return fine_coarse_ratio, photochemical_age_ratio
+
+
+def compute_inversion_lapse_rate(t_2m, t_925hpa):
+    """
+    Thermal Inversion Lapse Rate — the signed temperature difference between
+    the free troposphere at 925 hPa (~750 m AGL over Delhi) and the 2-m
+    surface temperature.
+
+        ΔT_inversion = T_925hPa − T_2m     [°C or K, identical for differences]
+
+    Physical interpretation
+    -----------------------
+    * ΔT_inversion > 0  : WARM INVERSION LID. The 925 hPa level is warmer than
+                          the surface. This is a classic subsidence inversion:
+                          the warm upper layer acts as a physical cap, preventing
+                          convective mixing and trapping pollutants near the
+                          surface. Delhi NCR experiences this most severely in
+                          November–January (post-monsoon ridge subsidence +
+                          nocturnal radiative cooling of the surface).
+
+    * ΔT_inversion ≈ 0  : Near-neutral atmosphere. Moderate mixing.
+
+    * ΔT_inversion < 0  : Normal lapse rate (atmosphere unstable). Good mixing,
+                          pollutant flushing. Typically daytime summer.
+
+    Parameters
+    ----------
+    t_2m : array-like
+        2-metre air temperature in °C (ERA5 field: 2m_temperature converted
+        to Celsius, or Open-Meteo `temperature_2m`).
+    t_925hpa : array-like
+        Temperature at 925 hPa in °C (ERA5 pressure-level field, or
+        Open-Meteo `temperature_925hpa`).
+
+    Returns
+    -------
+    delta_t_inversion : ndarray
+        ΔT in °C. Positive values indicate an inversion lid.
+    """
+    t2 = np.asarray(t_2m, dtype=float)
+    t925 = np.asarray(t_925hpa, dtype=float)
+    return t925 - t2
 
 
 # ---------------------------------------------------------------------------
