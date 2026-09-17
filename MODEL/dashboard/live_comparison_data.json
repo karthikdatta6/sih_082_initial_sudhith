@@ -1,15 +1,15 @@
 {
-  "timestamp": "2026-09-17T21:50:41.767261",
+  "timestamp": "2026-09-17T22:10:01.238861",
   "ground_truth": {
     "station_name": "Shanghai (\u4e0a\u6d77)",
-    "pm25": 53,
-    "pm10": 21,
+    "pm25": 50,
+    "pm10": 20,
     "o3": 45.9,
-    "no2": 6.9,
+    "no2": 6.4,
     "so2": 3.6,
     "co": 4.6,
-    "aqi_reported": 53,
-    "timestamp": "2026-09-17 23:00:00"
+    "aqi_reported": 50,
+    "timestamp": "2026-09-18 00:00:00"
   },
   "cams_global_model": {
     "pm25": 54.7,
@@ -761,121 +761,121 @@
     "forecasts": {
       "1": {
         "horizon_h": 1,
-        "target_hour": 22,
-        "pm25": 76.8,
-        "pm10": 30.4,
+        "target_hour": 23,
+        "pm25": 52.9,
+        "pm10": 21.1,
         "o3": 6.9,
-        "no2": 13.3,
-        "aqi": 156,
-        "category": "Moderate",
-        "icon": "\ud83d\udfe0",
+        "no2": 6.4,
+        "aqi": 88,
+        "category": "Satisfactory",
+        "icon": "\ud83d\udfe1",
         "subindices": {
-          "pm25": 156,
-          "pm10": 30,
+          "pm25": 88,
+          "pm10": 21,
           "o3": 7,
-          "no2": 17
+          "no2": 8
         }
       },
       "3": {
         "horizon_h": 3,
-        "target_hour": 0,
-        "pm25": 72.9,
-        "pm10": 28.9,
+        "target_hour": 1,
+        "pm25": 52.8,
+        "pm10": 21.1,
         "o3": 6.9,
-        "no2": 12.6,
-        "aqi": 144,
-        "category": "Moderate",
-        "icon": "\ud83d\udfe0",
+        "no2": 6.3,
+        "aqi": 88,
+        "category": "Satisfactory",
+        "icon": "\ud83d\udfe1",
         "subindices": {
-          "pm25": 144,
-          "pm10": 29,
+          "pm25": 88,
+          "pm10": 21,
           "o3": 7,
-          "no2": 16
+          "no2": 8
         }
       },
       "6": {
         "horizon_h": 6,
-        "target_hour": 3,
-        "pm25": 70.1,
-        "pm10": 27.8,
+        "target_hour": 4,
+        "pm25": 52.6,
+        "pm10": 21.0,
         "o3": 6.9,
-        "no2": 12.1,
-        "aqi": 134,
-        "category": "Moderate",
-        "icon": "\ud83d\udfe0",
+        "no2": 6.1,
+        "aqi": 88,
+        "category": "Satisfactory",
+        "icon": "\ud83d\udfe1",
         "subindices": {
-          "pm25": 134,
-          "pm10": 28,
+          "pm25": 88,
+          "pm10": 21,
           "o3": 7,
-          "no2": 15
+          "no2": 8
         }
       },
       "12": {
         "horizon_h": 12,
-        "target_hour": 9,
-        "pm25": 59.3,
-        "pm10": 23.5,
-        "o3": 73.1,
-        "no2": 11.6,
-        "aqi": 99,
+        "target_hour": 10,
+        "pm25": 48.5,
+        "pm10": 19.4,
+        "o3": 57.0,
+        "no2": 6.0,
+        "aqi": 81,
         "category": "Satisfactory",
         "icon": "\ud83d\udfe1",
         "subindices": {
-          "pm25": 99,
-          "pm10": 23,
-          "o3": 74,
-          "no2": 15
+          "pm25": 81,
+          "pm10": 19,
+          "o3": 58,
+          "no2": 8
         }
       },
       "24": {
         "horizon_h": 24,
-        "target_hour": 21,
-        "pm25": 64.4,
-        "pm10": 25.5,
+        "target_hour": 22,
+        "pm25": 47.4,
+        "pm10": 19.0,
         "o3": 6.9,
-        "no2": 11.2,
-        "aqi": 116,
-        "category": "Moderate",
-        "icon": "\ud83d\udfe0",
+        "no2": 5.9,
+        "aqi": 79,
+        "category": "Satisfactory",
+        "icon": "\ud83d\udfe1",
         "subindices": {
-          "pm25": 116,
-          "pm10": 26,
+          "pm25": 79,
+          "pm10": 19,
           "o3": 7,
-          "no2": 14
+          "no2": 7
         }
       },
       "48": {
         "horizon_h": 48,
-        "target_hour": 21,
-        "pm25": 61.8,
-        "pm10": 24.5,
+        "target_hour": 22,
+        "pm25": 46.3,
+        "pm10": 18.5,
         "o3": 6.9,
-        "no2": 10.7,
-        "aqi": 107,
-        "category": "Moderate",
-        "icon": "\ud83d\udfe0",
+        "no2": 5.7,
+        "aqi": 78,
+        "category": "Satisfactory",
+        "icon": "\ud83d\udfe1",
         "subindices": {
-          "pm25": 107,
-          "pm10": 24,
+          "pm25": 78,
+          "pm10": 19,
           "o3": 7,
-          "no2": 13
+          "no2": 7
         }
       },
       "72": {
         "horizon_h": 72,
-        "target_hour": 21,
-        "pm25": 60.3,
-        "pm10": 23.9,
+        "target_hour": 22,
+        "pm25": 45.7,
+        "pm10": 18.3,
         "o3": 6.9,
-        "no2": 10.5,
-        "aqi": 102,
-        "category": "Moderate",
-        "icon": "\ud83d\udfe0",
+        "no2": 5.7,
+        "aqi": 77,
+        "category": "Satisfactory",
+        "icon": "\ud83d\udfe1",
         "subindices": {
-          "pm25": 102,
-          "pm10": 24,
+          "pm25": 77,
+          "pm10": 18,
           "o3": 7,
-          "no2": 13
+          "no2": 7
         }
       }
     },
@@ -887,10 +887,10 @@
       "inversion_lid_active": false,
       "nw_transport_flux_ms": 2.12,
       "transport_lag_hours": 39.3,
-      "fine_coarse_ratio": 2.524,
+      "fine_coarse_ratio": 2.5,
       "photochemical_age_ratio": 1.8,
       "dewpoint_depression_c": 8.0,
-      "hygroscopic_swelling_index": 53.0
+      "hygroscopic_swelling_index": 50.0
     }
   }
 }
