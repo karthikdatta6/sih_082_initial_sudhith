@@ -19,12 +19,12 @@
    - Pure Held-Out Test runs July 1, 2025 – December 31, 2025.
    - 6-month temporal gap between train and test. No target or feature data from the test window ever enters training.
 2. **Test Performance Outperforms Validation:**
-   - For PM2.5 h=1: Val R² = 0.9321 → Test R² = 0.9634
-   - For PM2.5 h=48: Val R² = 0.4993 → Test R² = 0.6676
-   - For PM2.5 h=72: Val R² = 0.4494 → Test R² = 0.6426
-   *(In an overfitted system, test R² collapses relative to validation; here test R² is higher due to true physical generalisation).*
+   - For PM2.5 h=1: Val $R^2 = 0.9321$ $\rightarrow$ Test $R^2 = 0.9634$
+   - For PM2.5 h=48: Val $R^2 = 0.4993$ $\rightarrow$ Test $R^2 = 0.6676$
+   - For PM2.5 h=72: Val $R^2 = 0.4494$ $\rightarrow$ Test $R^2 = 0.6426$
+   *(In an overfitted system, test $R^2$ collapses relative to validation; here test $R^2$ is higher due to true physical generalisation).*
 3. **Beats Persistence Baseline Across All 21 Models:**
-   - Evaluated against naive persistence ($y_{t+h} = y_t$). Skill scores are positive across every horizon (h=1..72) for PM2.5, O3, and NO2 (Skill: +0.089 to +0.893). A memorisation model fails against persistence on unseen seasons.
+   - Evaluated against naive persistence ($y_{t+h} = y_t$). Skill scores are positive across every horizon (h=1..72) for PM2.5, $O_3$, and $NO_2$ (Skill: $+0.089$ to $+0.893$). A memorisation model fails against persistence on unseen seasons.
 4. **Adversarial Physics Stress Invariants (52/52 Passed):**
    - Out-of-distribution physical perturbations (e.g., hurricane wind speeds of 15 m/s, nocturnal zero-radiation regimes) maintain physical monotonicity.
 5. **Leave-One-Out (LOO) Cross-Sectional Guard:**
@@ -38,13 +38,13 @@
 
 | # | Severity | Finding / Metric | Root Cause | Actionable Fix / Status |
 |---|---|---|---|---|
-| **1** | 🔴 **HIGH** | **O3 Ablation Paradox**<br>Dropping any feature block *improves* O3 test R² in fast ablation (+0.004 to +0.013). | Fast ablation used 350 trees vs 1200; multi-collinear solar terms (`clearness_index`, `ssrd`, `solar_zenith_cos`). | Re-train full capacity via `04_train_ensemble_v3.py`. |
+| **1** | 🔴 **HIGH** | **O3 Ablation Paradox**<br>Dropping any feature block *improves* $O_3$ test $R^2$ in fast ablation (+0.004 to +0.013). | Fast ablation used 350 trees vs 1200; multi-collinear solar terms (`clearness_index`, `ssrd`, `solar_zenith_cos`). | Re-train full capacity via `04_train_ensemble_v3.py`. |
 | **2** | 🔴 **HIGH** | **NNLS Simplex Degeneration for O3**<br>Weights collapse to `[1.0, 0.0, 0.0]` (100% L1 LightGBM) for h=1, 3, 6, 48, 72. | L1 loss dominates skewed zero-heavy distributions; Huber/L2 add no marginal val gain. | `04_train_ensemble_v3.py` introduces true diversity (XGBoost GPU + Ridge + LightGBM). |
 | **3** | 🟡 **MEDIUM** | **O3 Mid-Horizon Legacy Regression**<br>h=6h ($\Delta R^2 = -0.024$) and h=12h ($\Delta R^2 = -0.016$) trail legacy v1.0.0. | v2 used `lr=0.045 / 1200` trees (under-capacity) vs legacy `lr=0.03 / 2500` trees. | Restored in v3 script (`lr=0.03 / 2200` + train+val refit). |
-| **4** | 🟡 **MEDIUM** | **Bias Correction Backfired on O3 h=1**<br>RMSE worsened from 9.88 → 10.16 ($	ext{gain} = -0.279$). | Linear bias parameters fit on val (mean 44.4 $\mu g/m^3$) overfit when applied to test (mean 31.3 $\mu g/m^3$). | Disable linear bias correction for O3 h=1 & h=24 (use raw ensemble predictions). |
-| **5** | 🟡 **MEDIUM** | **Val → Test Seasonal Shift**<br>O3 Val mean = 44.4 vs Test mean = 31.3 $\mu g/m^3$; PM2.5 Test mean is 26% higher than Val. | Natural Delhi meteorology: Val spans pre-monsoon heat, Test spans monsoon/winter inversion. | Acknowledge seasonal regime differences in evaluation writeup. |
+| **4** | 🟡 **MEDIUM** | **Bias Correction Backfired on O3 h=1**<br>RMSE worsened from 9.88 $\rightarrow$ 10.16 ($\text{gain} = -0.279$). | Linear bias parameters fit on val (mean 44.4 $\mu g/m^3$) overfit when applied to test (mean 31.3 $\mu g/m^3$). | Disable linear bias correction for $O_3$ h=1 & h=24 (use raw ensemble predictions). |
+| **5** | 🟡 **MEDIUM** | **Val $\rightarrow$ Test Seasonal Shift**<br>$O_3$ Val mean = 44.4 vs Test mean = 31.3 $\mu g/m^3$; PM2.5 Test mean is 26% higher than Val. | Natural Delhi meteorology: Val spans pre-monsoon heat, Test spans monsoon/winter inversion. | Acknowledge seasonal regime differences in evaluation writeup. |
 | **6** | 🟡 **MEDIUM** | **Long-Horizon Negative Bias for PM2.5**<br>h=48h bias = -4.14, h=72h bias = -6.49 $\mu g/m^3$. | `log1p` transform and L1 objective underestimate extreme tail peaks at multi-day horizons. | Apply quantile/percentile calibration post-processing at h=48/72. |
-| **7** | 🟡 **MEDIUM** | **O3 SMAPE > 50% at Multi-Day Horizons**<br>h=24: 54.5%, h=48: 60.0%, h=72: 62.7%. | SMAPE denominator $(|y| + |\hat{y}|)/2$ becomes unstable when nocturnal O3 → 0. | Report MAE/RMSE as primary O3 metrics; evaluate SMAPE daytime-only ($SSRD > 50$). |
+| **7** | 🟡 **MEDIUM** | **O3 SMAPE > 50% at Multi-Day Horizons**<br>h=24: 54.5%, h=48: 60.0%, h=72: 62.7%. | SMAPE denominator $(|y| + |\hat{y}|)/2$ becomes unstable when nocturnal $O_3 \rightarrow 0$. | Report MAE/RMSE as primary $O_3$ metrics; evaluate SMAPE daytime-only ($SSRD > 50$). |
 | **8** | 🟢 **LOW-MED** | **PM2.5 h=24 Non-Monotonic R²**<br>$R^2(h=24) = 0.7492 > R^2(h=12) = 0.7300$. | 24-hour diurnal lag features (`target_hour_sin/cos`, `target_y_clim`) lock onto diurnal cycle. | Documented as diurnal climatological periodicity benefit, not a bug. |
 | **9** | 🟢 **LOW** | **Schema Count Mismatch**<br>`feature_schema_v2.json` states 78 features; training uses 86 features. | Schema omits 5 station obs count columns + 1 fold climatology column. Stage 3 patches it. | Sync all 86 feature keys into static schema file. |
 | **10** | 🟢 **LOW** | **Hardcoded `n_stations = 10` in Bundle Metadata** | Metadata exports static integer. | Derive dynamically via `df["station_id"].nunique()`. |
@@ -104,23 +104,23 @@ collected 55 items
 
 ### Numerical Stress Test Invariant Matrix:
 1. **Law 1: Wind Flushing Invariant**
-   - At $BLH = 300	ext{ m}$, increasing wind speed from $1	ext{ m/s} ightarrow 15	ext{ m/s}$:
-   - Ventilation Coefficient: $300	ext{ m}^2/	ext{s} ightarrow 4500	ext{ m}^2/	ext{s}$ ($	imes 15.0$ exact linear scaling).
-   - Inversion Trap Index: $0.002083 ightarrow 0.000202	ext{ s/m}^2$ ($10	imes$ reduction).
+   - At $BLH = 300\text{ m}$, increasing wind speed from $1\text{ m/s} \rightarrow 15\text{ m/s}$:
+   - Ventilation Coefficient: $300\text{ m}^2/\text{s} \rightarrow 4500\text{ m}^2/\text{s}$ ($\times 15.0$ exact linear scaling).
+   - Inversion Trap Index: $0.002083 \rightarrow 0.000202\text{ s/m}^2$ ($10\times$ reduction).
    - Crisis Flag: Clears from 1.0 (Emergency) to 0.0. **[PASS ✅]**
 2. **Law 2: BLH Inversion Squash Invariant**
-   - Collapsing boundary layer height from $1200	ext{ m} ightarrow 60	ext{ m}$:
-   - Inversion Trap Index increases from $0.000234 ightarrow 0.003571	ext{ s/m}^2$.
+   - Collapsing boundary layer height from $1200\text{ m} \rightarrow 60\text{ m}$:
+   - Inversion Trap Index increases from $0.000234 \rightarrow 0.003571\text{ s/m}^2$.
    - Measured Volumetric Compression: **15.25×** (Matches theoretical $(1200+20)/(60+20) = 15.25$).
-   - $\Delta T_{	ext{inversion}} = +7.0^\circ	ext{C}$ (Strong warm lid). **[PASS ✅]**
+   - $\Delta T_{\text{inversion}} = +7.0^\circ\text{C}$ (Strong warm lid). **[PASS ✅]**
 3. **Law 3: Midnight Ozone Photolysis Invariant**
    - At Delhi winter midnight (Dec 15, 00:00 IST):
-   - Solar Zenith Angle cosine: $\cos(	heta_z) = -0.9923$ (SZA = $172.9^\circ \gg 95^\circ$).
-   - $SSRD = 0.0	ext{ W/m}^2$, Clearness Index $ightarrow 	ext{NaN}$ (Mathematically guarded).
+   - Solar Zenith Angle cosine: $\cos(\theta_z) = -0.9923$ (SZA = $172.9^\circ \gg 95^\circ$).
+   - $SSRD = 0.0\text{ W/m}^2$, Clearness Index $\rightarrow \text{NaN}$ (Mathematically guarded).
    - $O_3$ photoproduction physically shut down. **[PASS ✅]**
 4. **Law 4: Stubble Plume Directional Flip Invariant**
-   - NW Wind ($u=+2.83, v=-2.83	ext{ m/s}$ along Punjab-Delhi $135^\circ$ corridor): Transport Flux = **4.002 m/s**, Lag = **20.8 hours**.
-   - SE Wind ($u=-2.83, v=+2.83	ext{ m/s}$ opposite direction): Transport Flux = **0.000 m/s**, Lag = **72.0 hours** (Clamped max). **[PASS ✅]**
+   - NW Wind ($u=+2.83, v=-2.83\text{ m/s}$ along Punjab-Delhi $135^\circ$ corridor): Transport Flux = **4.002 m/s**, Lag = **20.8 hours**.
+   - SE Wind ($u=-2.83, v=+2.83\text{ m/s}$ opposite direction): Transport Flux = **0.000 m/s**, Lag = **72.0 hours** (Clamped max). **[PASS ✅]**
 
 ---
 
@@ -129,20 +129,20 @@ collected 55 items
 Four new vectorised functions added to [`coupled_physics.py`](file:///MODEL/code/coupled_physics.py):
 
 1. **`compute_ventilation_coefficient(blh, wind_speed)`**
-   $$VC = 	ext{BLH} 	imes 	ext{wind\_speed} \quad [	ext{m}^2/	ext{s}]$$
-   $$	ext{is\_ventilation\_crisis} = \mathbb{I}(VC < 2000.0)$$
+   $$VC = \text{BLH} \times \text{wind\_speed} \quad [\text{m}^2/\text{s}]$$
+   $$\text{is\_ventilation\_crisis} = \mathbb{I}(VC < 2000.0)$$
    *Complies with CPCB/IMD Emergency Action Plan thresholds for Delhi NCR.*
 
 2. **`compute_hygroscopic_swelling(pm25, dewpoint_depression)`**
-   $$	ext{swelling\_index} = rac{	ext{PM}_{2.5}}{1.0 + \exp(-	ext{DD})}$$
+   $$\text{swelling\_index} = \frac{\text{PM}_{2.5}}{1.0 + \exp(-\text{DD})}$$
    *Models non-linear aerosol swelling under high humidity/fog conditions.*
 
 3. **`compute_chemical_age_ratios(pm25, pm10, nox, no2)`**
-   $$	ext{fine\_coarse\_ratio} = rac{	ext{PM}_{2.5}}{	ext{PM}_{10} + 10^{-3}}, \quad 	ext{photochemical\_age\_ratio} = rac{	ext{NO}_x}{	ext{NO}_2 + 10^{-3}}$$
+   $$\text{fine\_coarse\_ratio} = \frac{\text{PM}_{2.5}}{\text{PM}_{10} + 10^{-3}}, \quad \text{photochemical\_age\_ratio} = \frac{\text{NO}_x}{\text{NO}_2 + 10^{-3}}$$
    *Distinguishes combustion smoke from road dust and fresh exhaust from aged plumes.*
 
 4. **`compute_inversion_lapse_rate(t_2m, t_925hpa)`**
-   $$\Delta T_{	ext{inversion}} = T_{925	ext{hPa}} - T_{2	ext{m}} \quad [^\circ	ext{C}]$$
+   $$\Delta T_{\text{inversion}} = T_{925\text{hPa}} - T_{2\text{m}} \quad [^\circ\text{C}]$$
    *Quantifies subsidence inversion lid capping vertical dispersion.*
 
 ---
@@ -183,7 +183,7 @@ PHYSICAL INTEGRITY CHECKS: 12/12 PASSED (Non-negative, bounded, nocturnal O3 = 0
    - Run `python MODEL/code/04_train_ensemble_v3.py`.
    - Restores higher tree capacity (`learning_rate=0.03`, 2200 rounds) and incorporates train+val refitting with GPU XGBoost + Ridge + LightGBM diversity.
 2. **Inference Guard (Backend API):**
-   - Disable linear bias correction for O3 horizons where $	ext{calibration\_gain} < 0$.
+   - Disable linear bias correction for O3 horizons where $\text{calibration\_gain} < 0$.
 3. **Artifact Sync:**
    - Commit trained `.pkl` models to enable remaining 3 model-level pytest checks.
 
