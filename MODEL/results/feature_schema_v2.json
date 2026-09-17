@@ -1,0 +1,505 @@
+{
+ "model_version": "2.0.0",
+ "system": "SIH26082_coupled_air_pollution_weather_forecast",
+ "target_pollutants": [
+  "PM25",
+  "O3",
+  "NO2"
+ ],
+ "feature_count": 78,
+ "legacy_feature_count": 58,
+ "forecast_horizons_hours": [
+  1,
+  3,
+  6,
+  12,
+  24,
+  48,
+  72
+ ],
+ "input_frequency": "1h",
+ "target_unit": "ug/m3",
+ "transform": "log1p applied during training; expm1 for inference",
+ "time_reference": "timestamp_utc is UTC; all target_* features are in IST (UTC+05:30) evaluated at the requested horizon",
+ "horizon_dependent_features": [
+  "target_hour_sin",
+  "target_hour_cos",
+  "target_dow_sin",
+  "target_dow_cos",
+  "target_doy_sin",
+  "target_doy_cos",
+  "target_solar_zenith_cos",
+  "target_ssrd_clim",
+  "target_blh_clim"
+ ],
+ "features": [
+  {
+   "name": "PM2.5_ground",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "PM10_ground",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "NO_ground",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "NOx_ground",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "NH3_ground",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "SO2_ground",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "CO_ground",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "era5_temperature_c",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "era5_dewpoint_c",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "era5_u10",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "era5_v10",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "era5_wind_speed",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "era5_relative_humidity",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "era5_surface_pressure_hpa",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "era5_boundary_layer_height",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "era5_solar_radiation_w_m2",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "era5_total_precipitation_mm",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "sat_NO2",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "sat_CO",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "sat_HCHO",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "satellite_age_hours",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "geo_dist_to_nearest_road_m",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "geo_road_length_1km_buffer_m",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "geo_road_length_3km_buffer_m",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "geo_dist_to_nearest_railway_m",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "station_enc",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "hour_sin",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "hour_cos",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "doy_sin",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "doy_cos",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "wind_sin",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "wind_cos",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "ventilation_coeff",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "photo_index",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "sat_NO2_available",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "sat_CO_available",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "landuse_commercial",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "landuse_grass",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "landuse_park",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "landuse_residential",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "NO2_ground_lag_1h",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "NO2_ground_lag_3h",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "NO2_ground_lag_6h",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "NO2_ground_lag_12h",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "NO2_ground_lag_24h",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "NO2_ground_roll_mean_6h",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "NO2_ground_roll_std_6h",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "NO2_ground_roll_mean_24h",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "NO2_ground_roll_std_24h",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "OZONE_ground_lag_1h",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "OZONE_ground_lag_3h",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "OZONE_ground_lag_6h",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "OZONE_ground_lag_12h",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "OZONE_ground_lag_24h",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "OZONE_ground_roll_mean_6h",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "OZONE_ground_roll_std_6h",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "OZONE_ground_roll_mean_24h",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "OZONE_ground_roll_std_24h",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "0_legacy_58"
+  },
+  {
+   "name": "aod_proxy",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "1_coupled_physics"
+  },
+  {
+   "name": "clearness_index",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "1_coupled_physics"
+  },
+  {
+   "name": "inversion_trap_index",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "1_coupled_physics"
+  },
+  {
+   "name": "nw_transport_flux",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "1_coupled_physics"
+  },
+  {
+   "name": "transport_lag_hours",
+   "dtype": "float64",
+   "missing_strategy": "native_nan",
+   "block": "1_coupled_physics"
+  },
+  {
+   "name": "regional_burning_proxy",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "1_coupled_physics"
+  },
+  {
+   "name": "upwind_downwind_gradient",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "1_coupled_physics"
+  },
+  {
+   "name": "city_pm25_mean",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "3_cross_sectional"
+  },
+  {
+   "name": "city_satco_mean",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "3_cross_sectional"
+  },
+  {
+   "name": "pm25_nw_gradient",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "3_cross_sectional"
+  },
+  {
+   "name": "dewpoint_depression",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "candidate_stability"
+  },
+  {
+   "name": "target_hour_sin",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "2_deterministic_future"
+  },
+  {
+   "name": "target_hour_cos",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "2_deterministic_future"
+  },
+  {
+   "name": "target_dow_sin",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "2_deterministic_future"
+  },
+  {
+   "name": "target_dow_cos",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "2_deterministic_future"
+  },
+  {
+   "name": "target_doy_sin",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "2_deterministic_future"
+  },
+  {
+   "name": "target_doy_cos",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "2_deterministic_future"
+  },
+  {
+   "name": "target_solar_zenith_cos",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "2_deterministic_future"
+  },
+  {
+   "name": "target_ssrd_clim",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "2_deterministic_future"
+  },
+  {
+   "name": "target_blh_clim",
+   "dtype": "float64",
+   "missing_strategy": "error",
+   "block": "2_deterministic_future"
+  }
+ ]
+}

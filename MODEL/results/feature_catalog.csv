@@ -1,0 +1,79 @@
+name,block,dtype,units,formula
+PM2.5_ground,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+PM10_ground,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+NO_ground,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+NOx_ground,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+NH3_ground,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+SO2_ground,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+CO_ground,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+era5_temperature_c,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+era5_dewpoint_c,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+era5_u10,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+era5_v10,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+era5_wind_speed,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+era5_relative_humidity,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+era5_surface_pressure_hpa,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+era5_boundary_layer_height,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+era5_solar_radiation_w_m2,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+era5_total_precipitation_mm,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+sat_NO2,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+sat_CO,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+sat_HCHO,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+satellite_age_hours,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+geo_dist_to_nearest_road_m,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+geo_road_length_1km_buffer_m,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+geo_road_length_3km_buffer_m,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+geo_dist_to_nearest_railway_m,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+station_enc,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+hour_sin,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+hour_cos,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+doy_sin,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+doy_cos,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+wind_sin,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+wind_cos,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+ventilation_coeff,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+photo_index,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+sat_NO2_available,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+sat_CO_available,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+landuse_commercial,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+landuse_grass,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+landuse_park,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+landuse_residential,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+NO2_ground_lag_1h,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+NO2_ground_lag_3h,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+NO2_ground_lag_6h,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+NO2_ground_lag_12h,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+NO2_ground_lag_24h,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+NO2_ground_roll_mean_6h,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+NO2_ground_roll_std_6h,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+NO2_ground_roll_mean_24h,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+NO2_ground_roll_std_24h,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+OZONE_ground_lag_1h,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+OZONE_ground_lag_3h,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+OZONE_ground_lag_6h,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+OZONE_ground_lag_12h,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+OZONE_ground_lag_24h,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+OZONE_ground_roll_mean_6h,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+OZONE_ground_roll_std_6h,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+OZONE_ground_roll_mean_24h,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+OZONE_ground_roll_std_24h,0_legacy_58,float64,see legacy schema,inherited verbatim from features_engineered.parquet
+aod_proxy,1_coupled_physics,float64,-,3*Q_ext*(PM2.5*1e-9)*BLH/(4*rho_p*r_eff)
+clearness_index,1_coupled_physics,float64,-,"SSRD/(1361*max(cos(theta_z),0.1)) at observation time"
+inversion_trap_index,1_coupled_physics,float64,s/m^2,1/((BLH+20)*(wind_speed+0.5))
+nw_transport_flux,1_coupled_physics,float64,m/s,"max(0, 0.7071*(u10-v10))"
+transport_lag_hours,1_coupled_physics,float64,h,"clip(300/(3.6*max(nw_transport_flux,0.5)), 6, 72)"
+regional_burning_proxy,1_coupled_physics,float64,mol^2/m^4,sat_CO * sat_HCHO * exp(-((doy-308)^2)/(2*15^2))
+upwind_downwind_gradient,1_coupled_physics,float64,mol/m^2,"sum_i w_i * sat_CO_i, w on NW axis, sum|w|=1"
+city_pm25_mean,3_cross_sectional,float64,ug/m3,leave-one-out cross-station mean of PM2.5 at t
+city_satco_mean,3_cross_sectional,float64,mol/m2,leave-one-out cross-station mean of sat_CO at t
+pm25_nw_gradient,3_cross_sectional,float64,ug/m3,"sum_i w_i * PM2.5_i, w on NW axis"
+dewpoint_depression,candidate_stability,float64,degC,era5_temperature_c - era5_dewpoint_c
+target_hour_sin,2_deterministic_future,float64,-,sin(2*pi*IST_hour(t+h)/24)
+target_hour_cos,2_deterministic_future,float64,-,cos(2*pi*IST_hour(t+h)/24)
+target_dow_sin,2_deterministic_future,float64,-,sin(2*pi*dow(t+h)/7)
+target_dow_cos,2_deterministic_future,float64,-,cos(2*pi*dow(t+h)/7)
+target_doy_sin,2_deterministic_future,float64,-,sin(2*pi*doy(t+h)/365.25)
+target_doy_cos,2_deterministic_future,float64,-,cos(2*pi*doy(t+h)/365.25)
+target_solar_zenith_cos,2_deterministic_future,float64,-,sin(phi)sin(delta)+cos(phi)cos(delta)cos(H) at t+h
+target_ssrd_clim,2_deterministic_future,float64,W/m2,"train-fold mean SSRD by (month, IST hour) at target time"
+target_blh_clim,2_deterministic_future,float64,m,"train-fold mean BLH by (month, IST hour) at target time"
